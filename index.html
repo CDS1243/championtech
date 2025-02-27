@@ -274,15 +274,56 @@
         <div class="row g-5">
             <div class="col-12 text-center">
                 <h1 class="display-5 mb-5">Stay Updated with Our Initiatives</h1>
-                <form class="mx-auto" style="max-width: 600px;">
+                <form id="subscriptionForm" class="mx-auto" style="max-width: 600px;">
                     <div class="input-group">
-                        <input type="text" class="form-control border-white p-3" placeholder="Your Email">
-                        <button class="btn btn-dark px-4">Sign Up</button>
+                        <input type="email" id="email" class="form-control border-white p-3" placeholder="Your Email" required>
+                        <button type="submit" class="btn btn-dark px-4" id="subscribeBtn">Sign Up</button>
                     </div>
                 </form>
+                <p id="subscribe-message" style="display: none; color: white; margin-top: 10px;"></p>
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+      emailjs.init("LfZuFdFlbF-WpF2Po"); // Replace with your actual Public Key
+    
+      document.getElementById("subscriptionForm").addEventListener("submit", function (event) {
+          event.preventDefault();
+    
+          const emailInput = document.getElementById("email");
+          const message = document.getElementById("subscribe-message");
+          const subscribeBtn = document.getElementById("subscribeBtn");
+    
+          if (!emailInput.checkValidity()) {
+              alert("Please enter a valid email address.");
+              return false;
+          }
+    
+          subscribeBtn.disabled = true;
+          subscribeBtn.textContent = "Subscribing...";
+    
+          emailjs.send("service_mkyxg34", "template_1gu10er", {
+              from_name: emailInput.value,  // Using email as the "from name"
+              to_name: "Champion Team",  // Replace with your recipient name
+              message: "A new user has subscribed with the email: " + emailInput.value
+          }).then(
+              function (response) {
+                  message.style.display = "block";
+                  message.textContent = `Thank you for subscribing, ${emailInput.value}!`;
+                  emailInput.value = ""; // Clear input field
+                  subscribeBtn.disabled = false;
+                  subscribeBtn.textContent = "Sign Up";
+              },
+              function (error) {
+                  alert("Oops! Something went wrong. Please try again.");
+                  subscribeBtn.disabled = false;
+                  subscribeBtn.textContent = "Sign Up";
+              }
+          );
+      });
+    </script>
+        
     <div class="container-fluid bg-dark text-secondary p-5">
        
     </div>
